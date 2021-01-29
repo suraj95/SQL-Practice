@@ -30,7 +30,7 @@ SQL statements define the necessary inputs and outputs, but the manner in which 
 
 **If you only need to execute SQL commands interactively, every database vendor provides at least a simple command-line tool for submitting SQL commands to the database engine and inspecting the results**. Most vendors provide a graphical tool as well that includes one window showing your SQL commands and another window showing the results from your SQL commands. 
 
-## Setting up MySQL
+## Setting up MySQL Database
 
 MyWind is a MySQL version of the Microsoft Access 2010 Northwind sample database which is quite popular for practicing SQL queries and it is also referenced in the [book](https://sqlpracticeproblems.com/) that I am currently using for practice. Note that the Mywind data is slightly different from the Northwind data, but the schema and all is the same.
 
