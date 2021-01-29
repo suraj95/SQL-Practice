@@ -34,6 +34,8 @@ SQL statements define the necessary inputs and outputs, but the manner in which 
 
 MyWind is a MySQL version of the Microsoft Access 2010 Northwind sample database which is quite popular for practicing SQL queries and it is also referenced in the [book](https://sqlpracticeproblems.com/) that I am currently using for practice. Note that the Mywind data is slightly different from the Northwind data, but the schema and all is the same.
 
+![alt text](./images/northwind-erd.png)
+
 These are instructions on how to set it up:
 
 1. Login to MYSQL
