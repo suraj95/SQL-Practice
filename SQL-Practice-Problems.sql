@@ -2,6 +2,7 @@
 # Introductory Problems
 
 # 1. Which shippers do we have?
+
 SELECT * FROM SHIPPERS;
 
 # 2. Certain fields from Categories (Table does not exist, change categories to Inventory_transactions)
@@ -37,7 +38,6 @@ WHERE job_title != 'Marketing Manager';
 SELECT id, product_name
 FROM products
 WHERE product_name LIKE "%pea%"; #Mysql only has %(zero or more) or _(any single character)
-
 
 # 8. Looking at the Orders table, there’s a field called Ship City. Write a query that shows the OrderID, CustomerID, and Ship City for the orders where the Ship City is either New York or Las Vegas.
 
