@@ -56,3 +56,26 @@ WHERE ship_city IN ('New York', 'Las Vegas','Miami', 'Chicago');
 SELECT first_name, last_name, job_title
 FROM employees
 ORDER BY last_name;
+
+# 11. Show Orders by sorted by Order date (question changed; original question was about sorting employees by joining date)
+
+SELECT id, employee_id, customer_id, order_date
+FROM ORDERS
+ORDER BY order_date;
+
+# 12. Show the FirstName and LastName columns from the Employees table, and then create a new column called FullName, showing FirstName and LastName joined together in one column, with a space in-between.
+
+SELECT first_name, last_name, CONCAT(first_name, " ", last_name) AS 'full_name'
+FROM employees;
+
+# 13. In the OrderDetails table, we have the fields UnitPrice and Quantity. Create a new field, TotalPrice, that multiplies these two together. We’ll ignore the Discount field for now.
+
+SELECT unit_price, quantity, (unit_price*quantity) AS total_price
+FROM order_details;
+
+# 14. How many Customers do we have in the customers table
+
+SELECT COUNT(id) AS number_of_customers
+FROM customers;
+
+
