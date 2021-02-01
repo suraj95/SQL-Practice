@@ -78,4 +78,38 @@ FROM order_details;
 SELECT COUNT(id) AS number_of_customers
 FROM customers;
 
+# 15. Show the date of the first order ever made in the Orders table (all dates are NULL though).
+
+SELECT MIN(date_allocated) AS first_order_ever
+FROM order_details; 
+
+# 16. Show a list of cities (changed from countries) where the Northwind company has customers.
+
+SELECT DISTINCT city 
+FROM customers; #list of cities
+
+SELECT city, COUNT(id)
+FROM customers
+GROUP BY city; #list of cities and the number of orders from each city
+
+# 17. Show a list of all the different values in the Customers table for ContactTitles. Also include a count for each ContactTitle.
+
+SELECT job_title, COUNT(id)
+FROM customers
+GROUP BY job_title; #list of job titles and the count of each title
+
+# 18. Show, for each product, the associated Supplier. Show the ProductID, ProductName, and the CompanyName of the Supplier. Sort by ProductID.
+
+SELECT p.id, p.product_name, s.company
+FROM products p, suppliers s 
+WHERE p.supplier_ids = s.id
+ORDER BY p.id; 
+
+# 19. Show a list of the Orders that were made, including the Shipper that was used. Show the OrderID, OrderDate (date only), and CompanyName of the Shipper, and sort by OrderID.
+
+SELECT o.id, o.order_date, s.company
+FROM orders o, suppliers s
+WHERE o.shipper_id = s.id
+ORDER BY o.id;
+
 
