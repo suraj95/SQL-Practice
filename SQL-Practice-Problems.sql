@@ -112,4 +112,41 @@ FROM orders o, suppliers s
 WHERE o.shipper_id = s.id
 ORDER BY o.id;
 
+# 20. Show the total number of products in each category. Sort the results by the total number of products, in descending order.
+
+SELECT category, COUNT(id) AS COUNT
+FROM products
+GROUP BY category
+ORDER by COUNT DESC;
+
+# 21. Show the total number of customers per Country and City.
+
+SELECT city, COUNT(id) AS COUNT
+FROM customers
+GROUP BY city
+ORDER by COUNT; #default is ASC
+
+# 22. What products do we have in our inventory that should be reordered?  For now, just use the fields UnitsInStock (not present) and ReorderLevel
+
+SELECT id, product_name, reorder_level, target_level
+FROM products
+WHERE reorder_level < target_level;
+
+# 23. Now we need to incorporate these fields—UnitsInStock (not present), UnitsOnOrder (not present), ReorderLevel, Discontinued—into our calculation.
+
+SELECT id, product_name, reorder_level, target_level
+FROM products
+WHERE reorder_level + minimum_reorder_quantity <= target_level AND discontinued = 0;
+
+# 24. A salesperson for Northwind is going on a business trip to visit customers, and would like to see a list of all customers, sorted by region, alphabetically.
+
+SELECT id, company, city
+FROM customers
+ORDER by city, id; # order by city first, id second
+
+
+
+
+
+
 
