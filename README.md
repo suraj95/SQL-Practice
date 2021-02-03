@@ -18,15 +18,15 @@ Along with Codd’s definition of the relational model, he proposed a language c
 
 SQL statements define the necessary inputs and outputs, but the manner in which a statement is executed is left to a component of your database engine known as the optimizer. The optimizer’s job is to look at your SQL statements and, taking into account how your tables are configured and what indexes are available, decide the most efficient execution path. Most database engines will allow you to influence the optimizer’s decisions by specifying optimizer hints, such as suggesting that a particular index be used etc. If you are using a non-database-specific language such as Java, however, you will need to use a toolkit/API to execute SQL statements from your code. Some of these toolkits are provided by your database vendor, whereas others are created by third-party vendors or by open source providers.
 
-| Language         | Toolkit              						  | 
-|------------------|----------------------------------------------|
-| Java 	   		   | JDBC   		      						  |
-| C++              | RogueWave Source Pro                         | 
-| C/C++ 	   	   | Pro*C, MySQL C API, DB2 Call Level Interface |
-| C#	 	   	   | ADO.NET   			  						  | 
-| PERL   		   | PERL DBI   			  					  | 
-| Python	 	   | Python DB   			  					  | 
-| Visual Basic 	   | ADO.NET   			 						  |
+| Language     | Toolkit              						  | 
+|--------------|----------------------------------------------|
+| Java 	   	   | JDBC   		      						  |
+| C++          | RogueWave Source Pro                         | 
+| C/C++ 	   | Pro*C, MySQL C API, DB2 Call Level Interface |
+| C#	 	   | ADO.NET   			  						  | 
+| PERL   	   | PERL DBI   			  					  | 
+| Python	   | Python DB   			  					  | 
+| Visual Basic | ADO.NET   			 						  |
 
 **If you only need to execute SQL commands interactively, every database vendor provides at least a simple command-line tool for submitting SQL commands to the database engine and inspecting the results**. Most vendors provide a graphical tool as well that includes one window showing your SQL commands and another window showing the results from your SQL commands. 
 
