@@ -103,7 +103,19 @@ GROUP BY job_title; #list of job titles and the count of each title
 SELECT p.id, p.product_name, s.company
 FROM products p, suppliers s 
 WHERE p.supplier_ids = s.id
-ORDER BY p.id; 
+ORDER BY p.id;
+
+	# This is basically an Inner Join. Putting a clause in the Join or the Where is equivalent.
+
+SELECT products.id, products.product_name, suppliers.company
+FROM products 
+INNER JOIN suppliers ON products.supplier_ids = suppliers.id
+ORDER BY products.id; 
+
+	# Theoretically, one shouldn't be any faster. The query optimizer should be able to 
+	# generate an identical execution plan. However, some database engines can produce better 
+	# execution plans for one of them (not likely to happen for such a simple query but for 
+	# complex enough ones). You should test both and see (on your database engine).
 
 # 19. Show a list of the Orders that were made, including the Shipper that was used. Show the OrderID, OrderDate (date only), and CompanyName of the Shipper, and sort by OrderID.
 
@@ -111,6 +123,9 @@ SELECT o.id, o.order_date, s.company
 FROM orders o, suppliers s
 WHERE o.shipper_id = s.id
 ORDER BY o.id;
+
+
+# Intermediate Problems
 
 # 20. Show the total number of products in each category. Sort the results by the total number of products, in descending order.
 
@@ -144,9 +159,44 @@ SELECT id, company, city
 FROM customers
 ORDER by city, id; # order by city first, id second
 
+# 25. Return the three ship countries with the highest average freight overall, in descending order by average freight.
 
+SELECT ship_city, AVG(shipping_fee) AS avg_shipping_fee 
+FROM orders
+GROUP BY ship_city
+ORDER BY avg_shipping_fee DESC LIMIT 3;
 
+# 26. Now, instead of using all the orders we have, we only want to see orders from the year 2015.
 
+SELECT ship_city, AVG(shipping_fee) AS avg_shipping_fee 
+FROM orders
+WHERE order_date BETWEEN '2006-01-15' AND '2006-03-22' #date changed according to data entered
+GROUP BY ship_city
+ORDER BY avg_shipping_fee DESC;
 
+# 27 and 28 are similar so skipping
+
+# 29. Sort inventory list by OrderID and Product ID.
+
+SELECT * 
+FROM order_details
+ORDER BY order_id, product_id;  #order by order_id first, product_id second
+
+# 30. There are some customers who have never actually placed an order. Show these customers
+
+SELECT
+customers.id AS Customers_ID,
+orders.customer_id AS Orders_CustomerID 
+FROM 
+customers LEFT JOIN orders # because orders are the NULL values
+ON orders.customer_id = customers.id AND orders.customer_id = NULL;
+
+	# See, with an Inner Join, putting a clause in the Join or the Where is equivalent. 	
+	# However, with an Outer Join, they are vastly different.
+
+	# Outer join produces super-set over inner join. The A left outer join returns all the 
+	# values from an inner join plus all values in the left table that do not match to the 
+	# right table. To model it without using LEFT JOIN would be a combination of UNION AS 
+	# well as INNER JOINS. 
 
 
