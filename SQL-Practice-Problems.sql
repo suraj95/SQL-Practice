@@ -237,7 +237,6 @@ GROUP BY CustomerID;
 	# Inner query returns a list of Customers and their orders within the specified dates. 
 	# Outer query aggregates them (calculates their sum after grouped by Customer ID).
 
-
 # 34. Change the above query to use the discount when calculating high-value customers. Order by the total amount which includes the discount.
 
 SELECT CustomerID, SUM(OrderAmount)
