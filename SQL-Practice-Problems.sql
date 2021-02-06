@@ -231,12 +231,25 @@ FROM
 	WHERE od.order_id = o.id AND order_date BETWEEN '2006-01-15' AND '2006-03-22'
 ) 
 AS subquery
+WHERE OrderAmount > 10000 #changed from 15000 because the highest order value is 13800
 GROUP BY CustomerID;
 
 	# Inner query returns a list of Customers and their orders within the specified dates. 
 	# Outer query aggregates them (calculates their sum after grouped by Customer ID).
 
 
+# 34. Change the above query to use the discount when calculating high-value customers. Order by the total amount which includes the discount.
+
+SELECT CustomerID, SUM(OrderAmount)
+FROM 
+(
+	SELECT o.customer_id AS CustomerID, od.unit_price * od.quantity* (1 - od.discount) AS 'OrderAmount' #discount is applied as a percentage (for example, 0.15 means 15%)
+	FROM orders o, order_details od
+	WHERE od.order_id = o.id AND order_date BETWEEN '2006-01-15' AND '2006-03-22'
+) 
+AS subquery
+WHERE OrderAmount > 10000 #changed from 15000 because the highest order value is 13800
+GROUP BY CustomerID;
 
 
 
