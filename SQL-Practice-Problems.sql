@@ -188,15 +188,55 @@ SELECT
 customers.id AS Customers_ID,
 orders.customer_id AS Orders_CustomerID 
 FROM 
-customers LEFT JOIN orders # because orders are the NULL values
+customers LEFT JOIN orders # because orders are the NULL values as we are finding customers with no orders
 ON orders.customer_id = customers.id AND orders.customer_id = NULL;
 
 	# See, with an Inner Join, putting a clause in the Join or the Where is equivalent. 	
 	# However, with an Outer Join, they are vastly different.
 
-	# Outer join produces super-set over inner join. The A left outer join returns all the 
+	# Outer join produces super-set over inner join. A left outer join returns all the 
 	# values from an inner join plus all values in the left table that do not match to the 
 	# right table. To model it without using LEFT JOIN would be a combination of UNION AS 
 	# well as INNER JOINS. 
+
+# 31. One employee (Margaret Peacock, EmployeeID 4) has placed the most orders. However, there are some customers who've never placed an order with her. Show only those customers who have never placed an order with her.
+
+SELECT
+customers.id AS Customers_ID,
+orders.customer_id AS Orders_CustomerID,
+orders.employee_id AS Orders_EmployeeID 
+FROM 
+customers LEFT JOIN orders
+ON orders.customer_id = customers.id AND orders.employee_id != 4; 
+
+	# This will give the customers that have never placed orders (NULL values) + the customers
+	# who have placed orders but the employee_id was not 4.
+
+
+# Advanced Problems
+
+# 32. We want to send all of our high-value customers a special VIP gift. We're defining high-value customers as those who've made at least 1 order with a total value (not including the discount) equal to $10,000 or more. We only want to consider orders made in the year 2016.
+
+SELECT o.customer_id AS CustomerID, (od.unit_price * od.quantity) AS 'OrderAmount'
+FROM orders o, order_details od
+WHERE od.order_id = o.id AND od.unit_price * od.quantity >= 10000 AND order_date BETWEEN '2006-01-15' AND '2006-03-22';
+
+# 33. The manager has changed his mind. Instead of requiring that customers have at least one individual orders totaling $10,000 or more, he wants to define high-value customers as those who have orders totaling $15,000 or more in 2016. How would you change the answer to the problem above?
+
+SELECT CustomerID, SUM(OrderAmount)
+FROM 
+(
+	SELECT o.customer_id AS CustomerID, od.unit_price * od.quantity AS 'OrderAmount'
+	FROM orders o, order_details od
+	WHERE od.order_id = o.id AND order_date BETWEEN '2006-01-15' AND '2006-03-22'
+) 
+AS subquery
+GROUP BY CustomerID;
+
+	# Inner query returns a list of Customers and their orders within the specified dates. 
+	# Outer query aggregates them (calculates their sum after grouped by Customer ID).
+
+
+
 
 
