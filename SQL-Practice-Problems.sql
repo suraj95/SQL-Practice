@@ -170,7 +170,7 @@ ORDER BY avg_shipping_fee DESC LIMIT 3;
 
 SELECT ship_city, AVG(shipping_fee) AS avg_shipping_fee 
 FROM orders
-WHERE order_date BETWEEN '2006-01-15' AND '2006-03-22' #date changed according to data entered
+WHERE YEAR(order_date) = 2006 #date changed according to data entered
 GROUP BY ship_city
 ORDER BY avg_shipping_fee DESC;
 
@@ -219,7 +219,8 @@ ON orders.customer_id = customers.id AND orders.employee_id != 4;
 
 SELECT o.customer_id AS CustomerID, (od.unit_price * od.quantity) AS 'OrderAmount'
 FROM orders o, order_details od
-WHERE od.order_id = o.id AND od.unit_price * od.quantity >= 10000 AND order_date BETWEEN '2006-01-15' AND '2006-03-22';
+WHERE od.order_id = o.id AND od.unit_price * od.quantity >= 10000 AND YEAR(order_date) = 2006;
+
 
 # 33. The manager has changed his mind. Instead of requiring that customers have at least one individual orders totaling $10,000 or more, he wants to define high-value customers as those who have orders totaling $15,000 or more in 2016. How would you change the answer to the problem above?
 
@@ -228,7 +229,7 @@ FROM
 (
 	SELECT o.customer_id AS CustomerID, od.unit_price * od.quantity AS 'OrderAmount'
 	FROM orders o, order_details od
-	WHERE od.order_id = o.id AND order_date BETWEEN '2006-01-15' AND '2006-03-22'
+	WHERE od.order_id = o.id AND YEAR(order_date) = 2006
 ) 
 AS subquery
 WHERE OrderAmount > 10000 #changed from 15000 because the highest order value is 13800
@@ -244,11 +245,64 @@ FROM
 (
 	SELECT o.customer_id AS CustomerID, od.unit_price * od.quantity * (1 - od.discount) AS 'OrderAmount' #discount is applied as a percentage (for example, 0.15 means 15%)
 	FROM orders o, order_details od
-	WHERE od.order_id = o.id AND order_date BETWEEN '2006-01-15' AND '2006-03-22'
+	WHERE od.order_id = o.id AND YEAR(order_date) = 2006
 ) 
 AS subquery
 WHERE OrderAmount > 10000 #changed from 15000 because the highest order value is 13800
 GROUP BY CustomerID;
+
+# 35. At the end of the month, salespeople are likely to try much harder to get orders, to meet their month-end quotas. Show all orders made on the last day of the month. Order by EmployeeID and OrderID
+
+SELECT customer_id AS CustomerID, employee_id as EmployeeID
+FROM orders
+WHERE order_date = '2006-04-30' 
+ORDER BY employee_id, customer_id;
+
+# 36. The Northwind mobile app developers are testing an app that customers will use to show orders. In order to make sure that even the largest orders will show up correctly on the app, they'd like some samples of orders that have lots of individual line items. Show the 10 orders with the most line items, in order of total line items.
+
+SELECT o.id AS OrderID, od.quantity AS ItemQuantity 
+FROM orders o, order_details od
+WHERE o.id = od.order_id 
+ORDER BY od.quantity DESC LIMIT 10; #changed because notes in all data are NULL values
+
+# 37. The Northwind mobile app developers would now like to just get a random assortment of orders for beta testing on their app. Show a random set of 2% of all orders.
+
+SELECT id AS OrderID
+FROM orders
+ORDER BY RAND() LIMIT 10; #2% of 48 comes down to 0.96 so I just randomly selected 10 as good size of sample
+
+# 38. Janet Leverling, one of the salespeople, has come to you with a request. She thinks that she accidentally double-entered a line item on an order, with a different ProductID, but the same quantity. She remembers that the quantity was 60 or more. Show all the OrderIDs with line items that match this, in order of OrderID.
+
+SELECT o.id AS OrderID, od.quantity AS ItemQuantity 
+FROM orders o, order_details od
+WHERE o.id = od.order_id AND od.quantity >= 60
+ORDER BY od.quantity DESC;
+
+# 39. Based on the previous question, we now want to show details of the order, for orders that match the above criteria.
+
+SELECT o.id AS OrderID, od.quantity AS ItemQuantity, od.product_id AS ProductID, od.unit_price AS UnitPrice, od.discount AS Discount
+FROM orders o, order_details od
+WHERE o.id = od.order_id AND od.quantity >= 60
+ORDER BY od.quantity DESC;
+
+# 40. However, there's a bug in this SQL. It returns 20 rows instead of 16. Correct the SQL.
+
+	#(Specific to Microsoft SQL Server so skipped)
+
+# 41. Some customers are complaining about their orders arriving late. Which orders are late?
+
+SELECT id AS OrderID
+FROM orders
+WHERE DATEDIFF(shipped_date,order_date) >=5 # defining late as orders which were shipped later than 5 days because there is not required_date column
+ORDER BY id;
+
+# 42. Some salespeople have more orders arriving late than others. Maybe they're not following up on the order process, and need more training. Which salespeople have the most orders arriving late?
+
+SELECT o.id AS OrderID, o.employee_id as EmployeeID, e.first_name AS FirstName, e.last_name AS LastName, e.company AS Company, e.job_title AS JobTitle
+FROM orders o, employees e
+WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=5 AND e.job_title LIKE "%sales%" # can be Sales Representative or Sales Manager
+ORDER BY o.id;
+
 
 
 
