@@ -293,15 +293,45 @@ ORDER BY od.quantity DESC;
 
 SELECT id AS OrderID
 FROM orders
-WHERE DATEDIFF(shipped_date,order_date) >=5 # defining late as orders which were shipped later than 5 days because there is not required_date column
+WHERE DATEDIFF(shipped_date,order_date) >=2 # defining late as orders which were shipped later than 5 days because there is not required_date column
 ORDER BY id;
 
 # 42. Some salespeople have more orders arriving late than others. Maybe they're not following up on the order process, and need more training. Which salespeople have the most orders arriving late?
 
 SELECT o.id AS OrderID, o.employee_id as EmployeeID, e.first_name AS FirstName, e.last_name AS LastName, e.company AS Company, e.job_title AS JobTitle
 FROM orders o, employees e
-WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=5 AND e.job_title LIKE "%sales%" # can be Sales Representative or Sales Manager
+WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=2 AND e.job_title LIKE "%sales%" # can be Sales Representative or Sales Manager or Sales Coordinator
 ORDER BY o.id;
+
+# 43. Andrew, the VP of sales, has been doing some more thinking some more about the problem of late orders. He realizes that just looking at the number of orders arriving late for each salesperson isn't a good idea. It needs to be compared against the total number of orders per salesperson.
+
+# Total Orders Table
+SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS TotalOrders
+FROM orders o, employees e
+WHERE o.employee_id = e.id 
+GROUP BY o.employee_id;
+
+# Late Orders Table
+SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS LateOrders
+FROM orders o, employees e
+WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=2 
+GROUP BY o.employee_id;
+
+#Left Join to combine both ResultSets
+
+SELECT t1.EmployeeID, t1.LastName, t1.TotalOrders, t2.LateOrders
+FROM 
+(SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS TotalOrders
+FROM orders o, employees e
+WHERE o.employee_id = e.id 
+GROUP BY o.employee_id) AS t1
+LEFT JOIN # because Late Orders are the NULL values (not all employees have Late Orders)
+(SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS LateOrders
+FROM orders o, employees e
+WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=2 
+GROUP BY o.employee_id) AS t2
+ON t1.EmployeeID = t2.EmployeeID;
+
 
 
 
