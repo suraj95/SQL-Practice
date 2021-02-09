@@ -337,7 +337,49 @@ LEFT JOIN # because Late Orders are the NULL values (not all employees have Late
 AS t2
 ON t1.EmployeeID = t2.EmployeeID;
 
+# 44. There's an employee missing in the answer from the problem above. Fix the SQL to show all employees who have taken orders.
 
+	#(Specific to Microsoft SQL Server so skipped)
 
+# 45. Fix the query to show 0 instead of a NULL in Late Orders
 
+SELECT t1.EmployeeID, t1.LastName, t1.TotalOrders, IFNULL(t2.LateOrders,0) AS LateOrderswithoutNULL
+FROM 
+(
+	SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS TotalOrders
+	FROM orders o, employees e
+	WHERE o.employee_id = e.id 
+	GROUP BY o.employee_id
+) 
+AS t1
+LEFT JOIN
+(
+	SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS LateOrders
+	FROM orders o, employees e
+	WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=2 
+	GROUP BY o.employee_id
+) 
+AS t2
+ON t1.EmployeeID = t2.EmployeeID;
+
+# 46. Now we want to get the percentage of late orders over total orders.
+
+SELECT t1.EmployeeID, t1.LastName, t1.TotalOrders, IFNULL(t2.LateOrders,0) AS LateOrderswithoutNULL, (IFNULL(t2.LateOrders,0)/t1.TotalOrders)*100 AS LatePercentage
+FROM 
+(
+	SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS TotalOrders
+	FROM orders o, employees e
+	WHERE o.employee_id = e.id 
+	GROUP BY o.employee_id
+) 
+AS t1
+LEFT JOIN
+(
+	SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS LateOrders
+	FROM orders o, employees e
+	WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=2 
+	GROUP BY o.employee_id
+) 
+AS t2
+ON t1.EmployeeID = t2.EmployeeID;
 
