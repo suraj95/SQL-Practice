@@ -3,7 +3,7 @@
 
 # 1. Which shippers do we have?
 
-SELECT * FROM SHIPPERS;
+SELECT * FROM shippers;
 
 # 2. Certain fields from Categories (Table does not exist, change categories to Inventory_transactions)
 
@@ -305,31 +305,36 @@ ORDER BY o.id;
 
 # 43. Andrew, the VP of sales, has been doing some more thinking some more about the problem of late orders. He realizes that just looking at the number of orders arriving late for each salesperson isn't a good idea. It needs to be compared against the total number of orders per salesperson.
 
-# Total Orders Table
+	#Total Orders Table
 SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS TotalOrders
 FROM orders o, employees e
 WHERE o.employee_id = e.id 
 GROUP BY o.employee_id;
 
-# Late Orders Table
+	#Late Orders Table
 SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS LateOrders
 FROM orders o, employees e
 WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=2 
 GROUP BY o.employee_id;
 
-#Left Join to combine both ResultSets
-
+	#Left Join to combine both ResultSets
 SELECT t1.EmployeeID, t1.LastName, t1.TotalOrders, t2.LateOrders
 FROM 
-(SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS TotalOrders
-FROM orders o, employees e
-WHERE o.employee_id = e.id 
-GROUP BY o.employee_id) AS t1
+(
+	SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS TotalOrders
+	FROM orders o, employees e
+	WHERE o.employee_id = e.id 
+	GROUP BY o.employee_id
+) 
+AS t1
 LEFT JOIN # because Late Orders are the NULL values (not all employees have Late Orders)
-(SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS LateOrders
-FROM orders o, employees e
-WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=2 
-GROUP BY o.employee_id) AS t2
+(
+	SELECT o.employee_id AS EmployeeID, e.last_name AS LastName, COUNT(o.id) AS LateOrders
+	FROM orders o, employees e
+	WHERE o.employee_id = e.id AND DATEDIFF(o.shipped_date,o.order_date) >=2 
+	GROUP BY o.employee_id
+) 
+AS t2
 ON t1.EmployeeID = t2.EmployeeID;
 
 
